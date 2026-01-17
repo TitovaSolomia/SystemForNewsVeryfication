@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const newsInput = document.getElementById('news-input');
     const resultDisplay = document.getElementById('result-display');
     const historyList = document.querySelector('.history-list');
+    const themeToggle = document.getElementById('theme-toggle');
 
     if (checkBtn) {
         checkBtn.addEventListener('click', function() {

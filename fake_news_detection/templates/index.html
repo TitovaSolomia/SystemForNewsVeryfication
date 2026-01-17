@@ -27,21 +27,22 @@
                             <p style="color: #666; padding: 20px;">No history yet.</p>
                         {% endfor %}
                     {% else %}
-                        <p style="color: #666; padding: 20px;">Sign in to see your history.</p>
+                        <p style="color: #666; padding: 20px;">Log in to see your history.</p>
                     {% endif %}
                 </div>
             </div>
 
             <div class="sidebar-bottom">
-                <label for="theme-toggle" class="theme-btn-label">
-                    </label>
+                <input type="checkbox" id="theme-toggle" style="display: none;"> 
+    
+                <label for="theme-toggle" class="theme-btn-label"></label>
 
                 <div class="client-info">
                     <span class="avatar">👤</span>
                     {% if user.is_authenticated %}
                         <span class="client-name">{{ user.username }}</span>
                     {% else %} 
-                       <span class="client-name">[Username]</span>   
+                    <span class="client-name">[Username]</span>   
                     {% endif %}    
                 </div>
             </div>
@@ -54,7 +55,7 @@
                     <span style="color: white; margin-right: 15px;">{{ user.username }}</span>
                     <a href="{% url 'logout' %}" class="sign-in-btn" style="text-decoration: none; display: inline-block; text-align: center;">Logout</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="sign-in-btn" style="text-decoration: none; display: inline-block; text-align: center;">Sign in</a>
+                    <a href="{% url 'login' %}" class="sign-in-btn" style="text-decoration: none; display: inline-block; text-align: center;">Log in</a>
                 {% endif %}
             </header>
 
