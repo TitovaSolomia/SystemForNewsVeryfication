@@ -1,18 +1,42 @@
-{%load static%}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<!-- <script type="module" src="{% static 'js/script.js' %}"></script> -->
 
 {% block content %}
-<div class="signup-container">
-    <h2>Create an Account</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
-</div>
 
-<style>
-    .signup-container { max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-    .signup-container p { margin-top: 15px; font-size: 0.9em; }
-</style>
+<div class="page-wrapper">
+    <div class="auth-container">
+        <h2>Create an Account</h2>
+        
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    
+                    {% if field.help_text %}
+                        <small class="help-text">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                    
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-submit">Sign Up</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}">Log In</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

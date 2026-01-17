@@ -12,18 +12,18 @@
     --theme-label: "Dark Mode";
 }
 
-body:has(#theme-toggle:checked) {
-    --bg-main: #ffffff;           
-    --bg-sidebar: #f4f4f4;        
-    --border-center: #000000;     
-    --text-primary: #000000;      
-    --text-secondary: #666666;
-    --input-bg: #ffffff;
-    --sidebar-border: #cccccc;
-    --btn-check-bg: #000000;      
-    --btn-check-text: #ffffff;
-    --theme-icon: "☀️";           
-    --theme-label: "Light Mode";
+:root[data-theme="light"] {
+  --bg-main: #ffffff;
+  --bg-sidebar: #f4f4f4;
+  --border-center: #000000;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --input-bg: #ffffff;
+  --sidebar-border: #cccccc;
+  --btn-check-bg: #000000;
+  --btn-check-text: #ffffff;
+  --theme-icon: "☀️";
+  --theme-label: "Light Mode";
 }
 
 * {
