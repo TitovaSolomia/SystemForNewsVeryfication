@@ -1,78 +1,127 @@
 :root {
-  --bg-main: #171717;
-  --bg-sidebar: #0d0d0d;
-  --text-primary: #ffffff;
-  --text-secondary: #b4b4b4;
-  --sidebar-border: #333333;
-  --input-bg: #2f2f2f;
-  --btn-check-bg: #ffffff;
-  --btn-check-text: #000000;
+    --bg-main: #212121;
+    --bg-sidebar: #171717;
+    --text-primary: #ffffff;
+    --text-secondary: #b4b4b4;
+    --sidebar-border: #333333;
+    --input-bg: #2f2f2f;
+    --btn-check-bg: #ffffff;
+    --btn-check-text: #000000;
+    --theme-icon: "🌙";
+    --theme-label: "Dark Mode";
 }
 
 :root[data-theme="light"] {
-  --bg-main: #ffffff;
-  --bg-sidebar: #f4f4f4;
-  --text-primary: #000000;
-  --text-secondary: #666666;
-  --sidebar-border: #cccccc;
-  --input-bg: #ffffff;
-  --btn-check-bg: #000000;
-  --btn-check-text: #ffffff;
+    --bg-main: #ffffff;
+    --bg-sidebar: #f4f4f4;
+    --text-primary: #000000;
+    --text-secondary: #666666;
+    --sidebar-border: #cccccc;
+    --input-bg: #ffffff;
+    --btn-check-bg: #000000;
+    --btn-check-text: #ffffff;
+    --theme-icon: "☀️";
+    --theme-label: "Light Mode";
 }
+
 body {
-    background-color: var(--bg-main); 
+    background-color: var(--bg-main);
     color: var(--text-primary);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
 }
+
 .card {
-    background-color: var(--bg-sidebar); 
-    border: 1px solid var(--sidebar-border); 
+    background-color: var(--bg-sidebar);
+    border: 1px solid var(--sidebar-border);
     border-radius: 15px;
     width: 100%;
     max-width: 400px;
     padding: 20px;
-    }
-h2 {
-    color: #ffffff !important;
-    font-weight: 600;
-    }
-.form-label {
-    color: #e0e0e0 !important; 
-    font-weight: 500;
-    }
-.form-control {
-    background-color: #2d2d2d !important; 
-    border: 1px solid #444 !important;
-    color: #ffffff !important;
-    }
-.form-control::placeholder {
-    color: #888 !important; 
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
+
+h2 {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+.form-label {
+    color: var(--text-primary) !important;
+    font-weight: 500;
+}
+
+.form-control {
+    background-color: var(--input-bg) !important;
+    border: 1px solid var(--sidebar-border) !important;
+    color: var(--text-primary) !important;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: var(--text-secondary) !important;
+}
+
 .form-control:focus {
-    background-color: #3d3d3d !important;
+    background-color: var(--input-bg) !important;
     border-color: #007bff !important;
-    box-shadow: 0 0 0 0.25 hrgba(0, 123, 255, 0.25);
-    }
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+    color: var(--text-primary) !important;
+}
+
 .btn-custom {
-    background-color: #ffffff;
-    color: #000000;
+    background-color: var(--btn-check-bg);
+    color: var(--btn-check-text);
     border-radius: 10px;
     font-weight: bold;
     transition: 0.3s;
-    border: none;
+    border: 1px solid var(--sidebar-border);
 }
+
 .btn-custom:hover {
-    background-color: #cccccc;
+    opacity: 0.8;
     transform: translateY(-2px);
 }
+
 .text-muted {
-    color: #aaaaaa !important;
+    color: var(--text-secondary) !important;
 }
+
 a.link-light-custom {
-    color: #ffffff;
+    color: var(--text-primary);
     text-decoration: underline;
+}
+#theme-toggle {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.theme-btn-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--sidebar-border);
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 15px;
+    user-select: none;
+    width: fit-content;
+    margin: 20px auto;
+}
+.theme-btn-label:hover {
+    filter: brightness(1.2);
+}
+.theme-btn-label::before {
+    content: var(--theme-icon);
+    font-size: 18px;
+}
+.theme-btn-label::after {
+    content: var(--theme-label);
 }

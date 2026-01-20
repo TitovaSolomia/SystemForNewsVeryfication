@@ -1,12 +1,25 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const checkBtn = document.getElementById('check-btn');
     const newsInput = document.getElementById('news-input');
     const resultDisplay = document.getElementById('result-display');
     const historyList = document.querySelector('.history-list');
     const themeToggle = document.getElementById('theme-toggle');
 
+    // Theme handling
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    if (themeToggle) {
+        themeToggle.checked = savedTheme === 'light';
+        themeToggle.addEventListener('change', function() {
+            const newTheme = this.checked ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+    
     if (checkBtn) {
-        checkBtn.addEventListener('click', function() {
+        checkBtn.addEventListener('click', function () {
             const newsText = newsInput.value.trim();
             if (!newsText) return;
 
@@ -17,35 +30,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: newsText })
             })
-            .then(response => response.json())
-            .then(data => {
-                resultDisplay.innerHTML = `<h2 style="color: white; text-align: center;">${data.result}</h2>`;
+                .then(response => response.json())
+                .then(data => {
+                    resultDisplay.innerHTML = `<h2 style="color: white; text-align: center;">${data.result}</h2>`;
 
-                const historyList = document.querySelector('.history-list');
-    
-                if (historyList) {
-                    const isLoggedOut = historyList.innerText.includes('Sign in to see');
+                    const historyList = document.querySelector('.history-list');
 
-                    if (!isLoggedOut) {
-                        const now = new Date();
-                        const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + 
-                                        `, ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
-                        
-                        const newRecord = document.createElement('div');
-                        newRecord.className = 'history-item';
-                        newRecord.innerHTML = `
+                    if (historyList) {
+                        const isLoggedOut = historyList.innerText.includes('Sign in to see');
+
+                        if (!isLoggedOut) {
+                            const now = new Date();
+                            const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) +
+                                `, ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+                            const newRecord = document.createElement('div');
+                            newRecord.className = 'history-item';
+                            newRecord.innerHTML = `
                             <small style="color: #888;">${dateStr}</small>
                             <p style="margin: 5px 0; color: #fff;">${newsText.substring(0, 40)}...</p>
                             <strong style="color: #4ade80;">${data.result}</strong>
                         `;
-                        historyList.prepend(newRecord);
+                            historyList.prepend(newRecord);
+                        }
                     }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                resultDisplay.innerHTML = "<p style='color: red;'>Connection failed.</p>";
-            });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    resultDisplay.innerHTML = "<p style='color: red;'>Connection failed.</p>";
+                });
         });
     }
 });
