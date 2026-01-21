@@ -95,11 +95,13 @@ a.link-light-custom {
     color: var(--text-primary);
     text-decoration: underline;
 }
+
 #theme-toggle {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
+
 .theme-btn-label {
     display: flex;
     align-items: center;
@@ -115,13 +117,29 @@ a.link-light-custom {
     width: fit-content;
     margin: 20px auto;
 }
+
 .theme-btn-label:hover {
     filter: brightness(1.2);
 }
+
 .theme-btn-label::before {
     content: var(--theme-icon);
     font-size: 18px;
 }
+
 .theme-btn-label::after {
     content: var(--theme-label);
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    body {
+        padding: 10px;
+        height: auto;
+        min-height: 100vh;
+    }
 }

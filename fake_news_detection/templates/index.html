@@ -1,67 +1,83 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FactChecker</title>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}?v=2" rel="stylesheet">
+    <script type="module" src="{% static 'js/script.js' %}"></script>
 </head>
+
 <body>
 
 
     <div class="app-container">
-        
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
         <aside class="sidebar">
             <div class="sidebar-content">
-                <h2 class="history-title">History</h2>
+                <h2 class="history-title">
+                    <svg class="history-title-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    History
+                </h2>
                 <div class="history-list">
                     {% if user.is_authenticated %}
-                        {% for item in history %}
-                            <div class="history-item" style="border-bottom: 1px solid #333; padding: 10px 0;">
-                                <p style="margin: 0; font-size: 0.8rem; color: #888;">{{ item.created_at|date:"d M, H:i" }}</p>
-                                <p style="margin: 5px 0; font-weight: bold; color: #fff;">{{ item.text|truncatechars:40 }}</p>
-                                <span style="font-size: 0.85rem; color: #4ade80;">{{ item.result_text }}</span>
-                            </div>
-                        {% empty %}
-                            <p style="color: #666; padding: 20px;">No history yet.</p>
-                        {% endfor %}
+                    {% for item in history %}
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-date">{{ item.created_at|date:"d M, H:i" }}</span>
+                        </div>
+                        <p class="history-text">{{ item.text|truncatechars:40 }}</p>
+                        <span class="history-result">{{ item.result_text }}</span>
+                    </div>
+                    {% endfor %}
                     {% else %}
-                        <p style="color: #666; padding: 20px;">Log in to see your history.</p>
+                    <p class="login-prompt">Log in to see your history.</p>
                     {% endif %}
                 </div>
             </div>
 
             <div class="sidebar-bottom">
-                <input type="checkbox" id="theme-toggle" style="display: none;"> 
-    
+                <input type="checkbox" id="theme-toggle" style="display: none;">
+
                 <label for="theme-toggle" class="theme-btn-label"></label>
 
                 <div class="client-info">
-                    <span class="avatar">👤</span>
                     {% if user.is_authenticated %}
-                        <span class="client-name">{{ user.username }}</span>
-                    {% else %} 
-                    <span class="client-name">[Username]</span>   
-                    {% endif %}    
+                    <span class="avatar">👤</span>
+                    <span class="client-name">{{ user.username }}</span>
+                    {% endif %}
                 </div>
             </div>
         </aside>
 
         <main class="main-content">
-            
+
             <header class="top-bar">
                 {% if user.is_authenticated %}
-                    <span style="color: white; margin-right: 15px;">{{ user.username }}</span>
-                    <a href="{% url 'logout' %}" class="sign-in-btn" style="text-decoration: none; display: inline-block; text-align: center;">Logout</a>
+                <a href="{% url 'logout' %}" button class="sign-in-btn">Log Out</a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="sign-in-btn" style="text-decoration: none; display: inline-block; text-align: center;">Log in</a>
+                <a href="{% url 'login' %}" button class="sign-in-btn">Log In</a>
                 {% endif %}
             </header>
 
             <section class="content-area">
                 <div class="content-box" id="result-display">
-                    </div>
+                    <img src="{% static 'img/robot.png' %}" alt="robot" class="robot-img">
+                </div>
             </section>
 
             <footer class="input-container">
@@ -73,6 +89,6 @@
 
         </main>
     </div>
-    <script src="{% static 'js/script.js' %}"></script>
 </body>
+
 </html>
