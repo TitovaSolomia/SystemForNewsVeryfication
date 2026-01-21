@@ -192,3 +192,19 @@ small,
 .theme-btn-label::after {
     content: var(--theme-label);
 }
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .page-wrapper {
+        padding: 20px 10px;
+    }
+
+    .auth-container h2 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+}
