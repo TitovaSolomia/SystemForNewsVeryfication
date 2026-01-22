@@ -12,10 +12,6 @@ true_news_path = os.path.join(RAW_DATA_DIR, "True.csv")
 fake_news_path = os.path.join(RAW_DATA_DIR, "Fake.csv")
 
 def remove_agency_prefix(text):
-    """
-    Видаляє префікси типу 'WASHINGTON (Reuters) - ' або 'LONDON (Reuters) - '
-    Це критично, щоб модель не ставала лінивою.
-    """
     if not isinstance(text, str):
         return ""
     clean_text = re.sub(r'^.*?\(Reuters\)\s*-\s*', '', text)
