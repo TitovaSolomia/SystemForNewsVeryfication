@@ -47,8 +47,7 @@ def train_model():
         ("clf", LogisticRegression(
             solver="saga", 
             max_iter=2000, 
-            C=0.1,                   
-            n_jobs=-1
+            C=0.1
         ))
     ])
 
