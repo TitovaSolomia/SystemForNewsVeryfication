@@ -27,4 +27,5 @@ urlpatterns = [
     path('', include('predictor.urls')),
 ]
 
-urlpatterns += static(settings.STATIC_URL, view=cache_control(no_cache=True, must_revalidate=True)(serve))
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
