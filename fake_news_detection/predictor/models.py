@@ -8,5 +8,9 @@ class NewsCheck(models.Model):
     result_text = models.CharField(max_length=255) 
     created_at = models.DateTimeField(auto_now_add=True) 
 
-    def __clstr__(self):
-        return f"{self.text[:50]}..."
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        username = self.user.username if self.user else 'Guest'
+        return f"{username} - {self.text[:30]}..."
