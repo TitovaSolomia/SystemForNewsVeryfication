@@ -9,10 +9,6 @@ from .forms import SignUpForm
 import json
 
 
-def index(request):
-    return render(request, 'index.html')
-
-
 @csrf_exempt 
 def check_fact(request):
     if request.method == 'POST':
@@ -86,26 +82,6 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
-
-# Writing the result in database
-
-@csrf_exempt
-def check_fact(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        news_text = data.get('text', '')
-        
-        probability = predict_news(news_text)
-        result_message = f"These news are {probability}% true"
-
-        if request.user.is_authenticated:
-            NewsCheck.objects.create(
-                user=request.user,
-                text=news_text,
-                result_text=result_message
-            )
-        
-        return JsonResponse({'result': result_message})
     
 # History of checking news 
 
