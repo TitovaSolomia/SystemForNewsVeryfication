@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from src.model import predict_news
+from predictor.runtime import predict_news
 from newspaper import Article
 from .models import NewsCheck
 from .forms import SignUpForm

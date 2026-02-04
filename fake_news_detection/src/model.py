@@ -11,7 +11,6 @@ import joblib
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "processed", "clean_data.csv")
 
-# Куди зберігаємо готовий pipeline
 MODEL_PATH = os.path.join(BASE_DIR, "data", "model.joblib")
 
 
@@ -63,28 +62,5 @@ def train_and_save_model():
     joblib.dump(pipeline, MODEL_PATH)
     return pipeline
 
-
-@lru_cache(maxsize=1)
-def get_model():
-    # На сервері: тільки завантаження готової моделі
-    if not os.path.exists(MODEL_PATH):
-        # НІКОЛИ не тренуємо тут автоматично — краще явно згенерувати модель локально
-        raise FileNotFoundError(
-            f"Model file not found: {MODEL_PATH}. "
-            "Run training locally to generate it."
-        )
-    return joblib.load(MODEL_PATH)
-
-
-def predict_news(text: str) -> int:
-    model = get_model()
-    cleaned = clean_text(text)
-
-    proba = model.predict_proba([cleaned])[0]
-    score = float(proba[1])
-
-    word_count = len(cleaned.split())
-    if word_count > 100 and score < 0.5:
-        score += 0.1
-
-    return round(min(score * 100, 100))
+if __name__ == "__main__":
+    train_and_save_model()
