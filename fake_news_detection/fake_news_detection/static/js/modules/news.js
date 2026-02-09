@@ -10,12 +10,35 @@ export class NewsChecker {
     }
 
     init() {
-        if (!this.checkBtn) return;
+        if (!this.checkBtn || !this.newsInput) return;
         this.checkBtn.addEventListener('click', () => this.handleAnalysis());
 
-        this.newsInput?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.handleAnalysis();
+        this.newsInput.addEventListener('input', () => this.autoResize());
+        this.newsInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.handleAnalysis();
+            }
         });
+
+        setTimeout(() => this.autoResize(), 100);
+    }
+
+    autoResize() {
+        if (!this.newsInput) return;
+
+        this.newsInput.style.height = 'auto';
+
+        const scrollHeight = this.newsInput.scrollHeight;
+        const maxHeight = 200;
+
+        if (scrollHeight > maxHeight) {
+            this.newsInput.style.height = maxHeight + 'px';
+            this.newsInput.style.overflowY = 'auto';
+        } else {
+            this.newsInput.style.height = scrollHeight + 'px';
+            this.newsInput.style.overflowY = 'hidden';
+        }
     }
 
     async handleAnalysis() {
