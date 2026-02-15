@@ -21,7 +21,53 @@ export class NewsChecker {
             }
         });
 
+        if (this.historyList) {
+            this.historyList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    this.handleDelete(e);
+                }
+            });
+        }
+
         setTimeout(() => this.autoResize(), 100);
+    }
+
+    async handleDelete(e) {
+        const btn = e.target;
+        const itemId = btn.dataset.id;
+        if (!itemId) return;
+
+        try {
+            const response = await fetch(`/delete-history/${itemId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': this.getCookie('csrftoken')
+                }
+            });
+
+            if (response.ok) {
+                const item = btn.closest('.history-item');
+                item.style.opacity = '0';
+                setTimeout(() => item.remove(), 300);
+            }
+        } catch (error) {
+            console.error('Failed to delete item:', error);
+        }
+    }
+
+    getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 
     autoResize() {
@@ -45,11 +91,19 @@ export class NewsChecker {
         const text = this.newsInput.value.trim();
         if (!text) return;
 
+        const isUrl = text.match(/^https?:\/\//i);
+        const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+
+        if (!isUrl && wordCount < 100) {
+            this.handleError(new Error(`Text is too short (${wordCount} words). Please provide at least 100 words or a URL for accurate prediction.`));
+            return;
+        }
+
         this.setLoading(true);
 
         try {
             const data = await this.fetchAnalysis(text);
-            this.updateUI(text, data.result);
+            this.updateUI(text, data.result, data.category, data.id);
         } catch (error) {
             this.handleError(error);
         } finally {
@@ -58,40 +112,54 @@ export class NewsChecker {
     }
 
     async fetchAnalysis(text) {
-        const response = await fetch(CONFIG.API_ENDPOINTS.CHECK_NEWS, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-        });
+        try {
+            const response = await fetch(CONFIG.API_ENDPOINTS.CHECK_NEWS, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
 
-        if (!response.ok) throw new Error('Network response was not ok');
-        return await response.json();
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Connection failed. Please try again later.');
+            }
+
+            return data;
+        } catch (error) {
+            if (error.name === 'SyntaxError') {
+                throw new Error('Server returned an invalid response');
+            }
+            throw error;
+        }
     }
 
-    updateUI(originalText, result) {
-        this.resultDisplay.innerHTML = `<h2 class="analysis-result">${result}</h2>`;
+    updateUI(originalText, result, category, id) {
+        this.resultDisplay.innerHTML = `<h2 class="analysis-result" style="color: var(--text-primary) !important;">${result}</h2>`;
 
-        this.appendToHistory(originalText, result);
+        this.appendToHistory(originalText, result, id);
     }
 
-    appendToHistory(text, result) {
+    appendToHistory(text, result, id, color) {
         if (!this.historyList || this.historyList.querySelector(CONFIG.SELECTORS.loginPrompt)) return;
 
         const dateStr = this.getFormattedDate();
-        const historyItem = this.createHistoryElement(text, result, dateStr);
+        const historyItem = this.createHistoryElement(text, result, dateStr, id, color);
 
         this.historyList.prepend(historyItem);
     }
 
-    createHistoryElement(text, result, date) {
+    createHistoryElement(text, result, date, id, color) {
         const div = document.createElement('div');
         div.className = 'history-item';
+        if (color) div.style.borderLeftColor = color;
         div.innerHTML = `
+            ${id ? `<button class="delete-btn" data-id="${id}" title="Delete">×</button>` : ''}
             <div class="history-header">
                 <span class="history-date">${date}</span>
             </div>
             <p class="history-text">${text.substring(0, 40)}${text.length > 40 ? '...' : ''}</p>
-            <span class="history-result">${result}</span>
+            <span class="history-result" ${color ? `style="color: ${color}"` : ''}>${result}</span>
         `;
         return div;
     }
@@ -107,7 +175,8 @@ export class NewsChecker {
 
     handleError(error) {
         console.error('FactChecker Error:', error);
-        this.resultDisplay.innerHTML = `<p style="color: var(--accent-pink); font-weight: 600;">Connection failed. Try again.</p>`;
+        const message = error.message || 'Connection failed. Try again.';
+        this.resultDisplay.innerHTML = `<p style="color: var(--accent-pink); font-weight: 600;">${message}</p>`;
     }
 
     getFormattedDate() {

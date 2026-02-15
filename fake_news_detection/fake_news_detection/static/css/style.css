@@ -152,6 +152,30 @@ html {
     flex-direction: column;
     gap: 6px;
     transition: all 0.2s ease;
+    position: relative;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    padding: 0 5px;
+}
+
+.history-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    color: var(--accent-pink);
 }
 
 .history-item:hover {

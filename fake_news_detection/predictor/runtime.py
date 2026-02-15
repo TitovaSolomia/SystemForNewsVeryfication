@@ -13,7 +13,7 @@ def clean_text(text):
     text = text.lower()
     text = re.sub(r"https?://\S+|www\.\S+", "", text)
     text = re.sub(r"\[.*?\]", "", text)
-    text = re.sub(r"[^a-zA-Z\s]", "", text)
+    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
@@ -28,7 +28,7 @@ def predict_news(text: str) -> int:
     cleaned = clean_text(text)
 
     proba = model.predict_proba([cleaned])[0]
-    score = float(proba[1])
+    score = float(proba[0])
 
     if len(cleaned.split()) > 100 and score < 0.5:
         score += 0.1

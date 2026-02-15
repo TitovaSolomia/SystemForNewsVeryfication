@@ -8,5 +8,6 @@ urlpatterns = [
     path('check/', views.check_fact, name='check_fact') ,
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
-    path('signup/', views.signup, name='signup') 
+    path('signup/', views.signup, name='signup'),
+    path('delete-history/<int:item_id>/', views.delete_history, name='delete_history'), 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

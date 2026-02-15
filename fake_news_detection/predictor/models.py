@@ -6,6 +6,7 @@ class NewsCheck(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField()
     result_text = models.CharField(max_length=255) 
+    category = models.CharField(max_length=20, default='neutral')
     created_at = models.DateTimeField(auto_now_add=True) 
 
     class Meta:

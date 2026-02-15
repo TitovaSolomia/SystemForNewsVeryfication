@@ -37,6 +37,7 @@
                     {% if user.is_authenticated %}
                     {% for item in history %}
                     <div class="history-item">
+                        <button class="delete-btn" data-id="{{ item.id }}" title="Delete">×</button>
                         <div class="history-header">
                             <span class="history-date">{{ item.created_at|date:"d M, H:i" }}</span>
                         </div>

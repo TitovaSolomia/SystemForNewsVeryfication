@@ -20,7 +20,7 @@ def clean_text(text):
     text = text.lower()
     text = re.sub(r"https?://\S+|www\.\S+", "", text)
     text = re.sub(r"\[.*?\]", "", text)
-    text = re.sub(r"[^a-zA-Z\s]", "", text)
+    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
@@ -42,8 +42,8 @@ def train_and_save_model():
 
     pipeline = Pipeline([
         ("tfidf", TfidfVectorizer(
-            max_features=20000,
-            ngram_range=(1, 2),
+            max_features=30000,
+            ngram_range=(1, 3),
             stop_words="english",
             min_df=10,
             max_df=0.7,
@@ -52,7 +52,7 @@ def train_and_save_model():
         ("clf", LogisticRegression(
             solver="saga",
             max_iter=2000,
-            C=0.1
+            C=2.0 
         ))
     ])
 
