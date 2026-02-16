@@ -40,4 +40,4 @@ htmlcov/
 .env
 
 # Database
-db.sqlite3
+db.sqlite3fake_news_detection/data/
