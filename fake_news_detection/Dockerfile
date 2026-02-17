@@ -29,9 +29,9 @@ RUN python -m nltk.downloader punkt_tab
 # Copy project
 COPY . /app/
 
-# Expose port
-EXPOSE 8000
+# Collect static files
+RUN python manage.py collectstatic --noinput
 
-# Run migrations and start server
-# Note: In production, you'd use gunicorn. For now, runserver is okay for dev.
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+# Run migrations and start server using gunicorn
+# Render provides the PORT environment variable
+CMD ["sh", "-c", "python manage.py migrate && gunicorn fake_news_detection.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
