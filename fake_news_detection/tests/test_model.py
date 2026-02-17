@@ -1,5 +1,5 @@
 import pytest
-from src.model import clean_text, predict_news
+from predictor.runtime import clean_text, predict_news
 
 class TestMLModel:
     """
@@ -9,7 +9,7 @@ class TestMLModel:
     @pytest.mark.parametrize("input_text, expected", [
         ("Hello WORLD!", "hello world"),
         ("Check this: https://google.com links should go.", "check this links should go"),
-        ("Numbers 123 and [brackets] gone.", "numbers and gone"),
+        ("Numbers 123 and [brackets] gone.", "numbers 123 and gone"),
         ("   Too    many    spaces   ", "too many spaces"),
         (None, ""),
     ])

@@ -43,7 +43,9 @@ class TestPredictorViews:
     def test_check_fact_api_basic(self, client):
         """Test the fact checking JSON endpoint."""
         url = reverse('check_fact')
-        data = {'text': 'This is a test news article about something real.'}
+        # Providing > 100 words to satisfy views.py requirement
+        long_text = "This is a test news article about something real. " * 25 
+        data = {'text': long_text}
         # Note: views.py uses json.loads(request.body), so we send as json
         response = client.post(url, data=data, content_type='application/json')
         

@@ -30,7 +30,4 @@ def predict_news(text: str) -> int:
     proba = model.predict_proba([cleaned])[0]
     score = float(proba[0])
 
-    if len(cleaned.split()) > 100 and score < 0.5:
-        score += 0.1
-
     return round(min(score * 100, 100))
