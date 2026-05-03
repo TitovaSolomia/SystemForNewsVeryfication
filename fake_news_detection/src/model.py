@@ -1,6 +1,5 @@
 import os
 import re
-from functools import lru_cache
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -10,8 +9,8 @@ import joblib
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "processed", "clean_data.csv")
-
 MODEL_PATH = os.path.join(BASE_DIR, "data", "model.joblib")
+TEST_DATA_PATH = os.path.join(BASE_DIR, "data", "processed", "test_data.csv")
 
 
 def clean_text(text):
@@ -30,14 +29,21 @@ def train_and_save_model():
         raise FileNotFoundError(f"Dataset not found: {DATA_PATH}")
 
     df = pd.read_csv(DATA_PATH)
+
     df["title"] = df["title"].fillna("").apply(clean_text)
     df["text"] = df["text"].fillna("").apply(clean_text)
+    df["full_text"] = df["title"] + " " + df["text"]
+    df["label"] = df["label"].astype(int)
 
-    X = df["title"] + " " + df["text"]
+    X = df["full_text"].fillna("")
     y = df["label"].astype(int)
 
-    X_train, _, y_train, _ = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
     )
 
     pipeline = Pipeline([
@@ -52,7 +58,8 @@ def train_and_save_model():
         ("clf", LogisticRegression(
             solver="saga",
             max_iter=2000,
-            C=2.0 
+            C=2.0,
+            random_state=42
         ))
     ])
 
@@ -60,7 +67,18 @@ def train_and_save_model():
 
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
     joblib.dump(pipeline, MODEL_PATH)
+
+    test_df = pd.DataFrame({
+        "text": X_test,
+        "label": y_test
+    })
+    test_df.to_csv(TEST_DATA_PATH, index=False)
+
+    print(f"Model saved to: {MODEL_PATH}")
+    print(f"Test data saved to: {TEST_DATA_PATH}")
+
     return pipeline
+
 
 if __name__ == "__main__":
     train_and_save_model()
